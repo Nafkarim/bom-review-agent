@@ -248,6 +248,8 @@ The **clean BOM** (build `BLD-2026-0413`) comes back **READY** with no LLM call,
 
 Part numbers, manufacturers and the ODM are invented. [DEMO.md](DEMO.md) has a 3-minute walkthrough.
 
+**A larger test set** lives in [`demo/test-bom-50/`](demo/test-bom-50/): a 50-line BOM (build `BLD-2026-0507`) with 8 issues placed at random. Upload its four files in the app, and check the results against [`ANSWER_KEY.md`](demo/test-bom-50/ANSWER_KEY.md). To generate a different layout, run `node scripts/make-test-bom.mjs <seed>`. A unit test checks the key against the rules.
+
 ## Testing
 
 ```bash

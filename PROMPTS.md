@@ -169,3 +169,9 @@ This file records the prompts used to plan and build this project, as the Cloudf
 > show me what the Bom data looks like
 
 **Outcome:** Claude showed the planted-issues demo BOM as a table, marking the six planted issues and the info items against the spec values they break.
+
+### 25. 2026-10-29
+**Prompt:**
+> Generate a mock up bom with 50 parts, imbed 8 issues randomly within them, save this file in the folder for later testing
+
+**Outcome:** Claude wrote a seeded generator (`scripts/make-test-bom.mjs`) and saved `demo/test-bom-50/` (50-line BOM, spec, certs, context, answer key) with 8 randomly placed issues of 8 different types, plus a unit test confirming the rules find exactly those 8.
