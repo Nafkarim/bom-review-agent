@@ -150,4 +150,34 @@ This file records the prompts used to plan and build this project, as the Cloudf
 **Prompt:**
 > create a github repo for this project and make a PR
 
-**Outcome:** (pending)
+**Outcome:** Claude created the public repo Nafkarim/bom-review-agent (planning docs on `main`) and opened PR #1 with the MVP build from `feat/bom-review-mvp`.
+
+### 22. 2026-10-28
+**Prompt:**
+> Turn on Auto-fix for PR #1.
+
+**Outcome:** Claude enabled Auto-fix on PR #1, so CI failures, merge conflicts and review comments wake the session to fix them.
+
+### 23. 2026-10-28
+**Prompt:**
+> write out a read me
+
+**Outcome:** Claude rewrote README.md in full (what it does, design principle, assignment mapping, architecture, run/deploy, model table and usage meter, input formats, severity rules, demo data, tests, structure, troubleshooting, limitations) and pushed it to PR #1.
+
+### 24. 2026-10-29
+**Prompt:**
+> show me what the Bom data looks like
+
+**Outcome:** Claude showed the planted-issues demo BOM as a table, marking the six planted issues and the info items against the spec values they break.
+
+### 25. 2026-10-29
+**Prompt:**
+> Generate a mock up bom with 50 parts, imbed 8 issues randomly within them, save this file in the folder for later testing
+
+**Outcome:** Claude wrote a seeded generator (`scripts/make-test-bom.mjs`) and saved `demo/test-bom-50/` (50-line BOM, spec, certs, context, answer key) with 8 randomly placed issues of 8 different types, plus a unit test confirming the rules find exactly those 8.
+
+### 26. 2026-10-29
+**Prompt:**
+> Build a way users can change/edit the gold standard is spec.json, the rack spec. I want this incase specs change and/or scaling the tool to different racks
+
+**Outcome:** Claude added a versioned spec library (SpecLibrary Durable Object) with a Rack specs editor: edit parts, mandatory revision bump with change preview and history, new/duplicated rack specs, import/export. Reviews now use library specs (snapshotted) and flag BOMs built to an older revision; verified end to end in the browser.

@@ -1,0 +1,90 @@
+{
+  "seed": 20261029,
+  "buildId": "BLD-2026-0507",
+  "lines": 50,
+  "issues": [
+    {
+      "lines": [
+        4
+      ],
+      "partNumber": "RK-SRV-2U-G5",
+      "category": "missing-data",
+      "severity": "needs-review",
+      "source": "rule",
+      "detail": "cert FAI-SRV-2U-G5-R2 is referenced but not in certs.csv"
+    },
+    {
+      "lines": [
+        5,
+        6
+      ],
+      "partNumber": "RK-PSU-1600",
+      "category": "cert",
+      "severity": "blocker",
+      "source": "rule",
+      "detail": "cert FAI-PSU-1600-OLD is against drawing rev B, spec is rev C"
+    },
+    {
+      "lines": [
+        11,
+        12
+      ],
+      "partNumber": "HX-U2-3840",
+      "substituteFor": "RK-SSD-3T84",
+      "category": "substitution",
+      "severity": "needs-review (blocker if the model rates it high-risk)",
+      "source": "llm",
+      "detail": "Halcyon Storage HX-U2-3840 replaces RK-SSD-3T84 (Meridian Compute), not on the approved list"
+    },
+    {
+      "lines": [
+        19
+      ],
+      "partNumber": "RK-SW-MGMT-1G",
+      "category": "revision-mismatch",
+      "severity": "blocker",
+      "source": "rule",
+      "detail": "rev A, spec needs rev B"
+    },
+    {
+      "lines": [
+        22
+      ],
+      "partNumber": "RK-DAC-100G-2M",
+      "category": "quantity",
+      "severity": "blocker",
+      "source": "rule",
+      "detail": "total 31, spec needs 32 (short 1, split across 2 lines)"
+    },
+    {
+      "lines": [
+        38
+      ],
+      "partNumber": "RK-PANEL-SIDE",
+      "category": "vendor",
+      "severity": "blocker",
+      "source": "rule",
+      "detail": "Brightwater Mfg is not an approved manufacturer (spec: Granite Racks)"
+    },
+    {
+      "lines": [
+        42
+      ],
+      "partNumber": "RK-PDU-MON",
+      "category": "not-in-spec",
+      "severity": "blocker",
+      "source": "llm",
+      "detail": "RK-PDU-MON (PDU environmental monitoring dongle) is not in the spec"
+    },
+    {
+      "lines": [
+        48
+      ],
+      "partNumber": "RK-TRAY-VERT",
+      "category": "lead-time",
+      "severity": "blocker",
+      "source": "rule",
+      "detail": "81-day lead time lands 31 days after need-by 2026-12-18"
+    }
+  ]
+}

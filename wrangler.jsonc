@@ -1,0 +1,48 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bom-review-agent",
+  "main": "src/server.ts",
+  // Latest date supported by the workerd runtime bundled with this wrangler version.
+  "compatibility_date": "2026-07-21",
+  "compatibility_flags": ["nodejs_compat"],
+  "ai": { "binding": "AI", "remote": true },
+  "vars": {
+    // Default LLM for new reviews; must be an id from MODELS in src/config.ts.
+    "DEFAULT_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+  },
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/agents/*"]
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "class_name": "ReviewAgent",
+        "name": "ReviewAgent"
+      },
+      {
+        "class_name": "SpecLibrary",
+        "name": "SpecLibrary"
+      }
+    ]
+  },
+  "workflows": [
+    {
+      "name": "review-workflow",
+      "binding": "REVIEW_WORKFLOW",
+      "class_name": "ReviewWorkflow"
+    }
+  ],
+  "migrations": [
+    {
+      "new_sqlite_classes": ["ReviewAgent"],
+      "tag": "v1"
+    },
+    {
+      "new_sqlite_classes": ["SpecLibrary"],
+      "tag": "v2"
+    }
+  ],
+  "observability": { "enabled": true }
+}

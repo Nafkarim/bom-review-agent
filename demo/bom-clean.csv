@@ -1,0 +1,39 @@
+line,part_number,description,manufacturer,quantity,revision,lead_time_days,cert_ref
+1,RK-FRAME-48U,"48U rack frame, 600x1200mm",Granite Racks,1,B,21,FAI-FRAME-48U
+2,RK-PDU-30A-3P,"Switched PDU, 30A 3-phase, 42x C13 / 6x C19",Northwind Power,2,D,28,FAI-PDU-30A-3P
+3,RK-BRKT-PDU,Tool-less PDU mounting bracket,Granite Racks,4,A,10,FAI-BRKT-PDU
+4,RK-SRV-2U-G5,"2U compute server, gen 5, 2x CPU",Meridian Compute,16,F,35,FAI-SRV-2U-G5
+5,RK-PSU-1600,"Server power supply, 1600W titanium",Meridian Compute,32,C,30,FAI-PSU-1600
+6,RK-DIMM-64G,64GB DDR5 RDIMM,Meridian Compute,128,A,25,FAI-DIMM-64G
+7,RK-DIMM-64G,64GB DDR5 RDIMM,Meridian Compute,128,A,25,FAI-DIMM-64G
+8,RK-SSD-3T84,3.84TB NVMe U.2 SSD,Meridian Compute,64,D,30,FAI-SSD-3T84
+9,RK-NIC-100G,"Dual-port 100GbE NIC, PCIe Gen5",Summit Networks,16,B,28,FAI-NIC-100G
+10,RK-RAIL-2U,2U sliding rail kit,Granite Racks,16,B,14,FAI-RAIL-2U
+11,RK-CMA-2U,2U cable management arm,Granite Racks,16,A,14,FAI-CMA-2U
+12,RK-SW-TOR-100G,"Top-of-rack switch, 32x 100G QSFP28",Summit Networks,2,C,40,FAI-SW-TOR-100G
+13,RK-SW-MGMT-1G,"Management switch, 48x 1G RJ45",Summit Networks,1,B,21,FAI-SW-MGMT-1G
+14,RK-RAIL-1U,1U fixed rail kit,Granite Racks,3,A,14,FAI-RAIL-1U
+15,RK-XCVR-100G-SR4,"100G QSFP28 SR4 transceiver, 850nm, MPO-12",Atlas Optics,32,A,30,FAI-XCVR-100G-SR4
+16,RK-DAC-100G-2M,"100G QSFP28 passive DAC, 2m",Keystone Cable,16,A,20,FAI-DAC-100G-2M
+17,RK-DAC-100G-2M-S,"100G QSFP28 passive DAC, 2m (Summit)",Summit Networks,16,A,15,FAI-DAC-100G-2M-S
+18,RK-CBL-OM4-3M,"OM4 MPO-12 fiber trunk, 3m",Keystone Cable,32,A,18,FAI-CBL-OM4-3M
+19,RK-CBL-CAT6-1M,"Cat6 patch cable, 1m, blue",Keystone Cable,20,A,10,FAI-CBL-CAT6-1M
+20,RK-CBL-CAT6-3M,"Cat6 patch cable, 3m, blue",Keystone Cable,4,A,10,FAI-CBL-CAT6-3M
+21,RK-CBL-PWR-C19,"C19-C20 power cable, 1.5m",Keystone Cable,36,A,12,FAI-CBL-PWR-C19
+22,RK-CBL-PWR-C13,"C13-C14 power cable, 1m",Keystone Cable,6,A,12,FAI-CBL-PWR-C13
+23,RK-PATCH-24,"24-port Cat6 patch panel, 1U",Keystone Cable,1,A,14,FAI-PATCH-24
+24,RK-CONSOLE-SRV,"Serial console server, 16-port",Summit Networks,1,C,28,FAI-CONSOLE-SRV
+25,RK-SENSOR-ENV,Rack temperature/humidity sensor,Harbor Thermal,2,B,21,FAI-SENSOR-ENV
+26,RK-DOOR-PERF,"Perforated front door, 48U",Granite Racks,1,A,21,FAI-DOOR-PERF
+27,RK-DOOR-REAR,"Split perforated rear door, 48U",Granite Racks,1,A,21,FAI-DOOR-REAR
+28,RK-PANEL-SIDE,"Side panel pair, 48U",Granite Racks,1,A,21,FAI-PANEL-SIDE
+29,RK-BLANK-1U,1U tool-less blanking panel,Granite Racks,10,A,7,FAI-BLANK-1U
+30,RK-CAGE-M6,M6 cage nut and screw kit (50 pcs),Granite Racks,2,A,7,FAI-CAGE-M6
+31,RK-GND-KIT,Rack grounding and bonding kit,Northwind Power,1,A,14,FAI-GND-KIT
+32,RK-CASTER-KIT,Heavy-duty caster and leveler kit,Granite Racks,1,A,14,FAI-CASTER-KIT
+33,RK-LABEL-KIT,Port and cable label kit,Keystone Cable,1,A,7,FAI-LABEL-KIT
+34,RK-VELCRO-5M,"Hook-and-loop cable wrap, 5m roll",Keystone Cable,2,A,7,FAI-VELCRO-5M
+35,RK-SEAL-KIT,Air dam and brush strip seal kit,Harbor Thermal,1,A,14,FAI-SEAL-KIT
+36,RK-TRAY-VERT,"Vertical cable manager, 48U",Granite Racks,2,B,14,FAI-TRAY-VERT
+37,RK-SHIP-BRKT,Shipping brace kit,Granite Racks,1,A,10,FAI-SHIP-BRKT
+38,RK-DOC-PACK,Rack build documentation pack,Granite Racks,1,A,3,FAI-DOC-PACK
