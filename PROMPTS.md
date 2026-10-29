@@ -163,3 +163,9 @@ This file records the prompts used to plan and build this project, as the Cloudf
 > write out a read me
 
 **Outcome:** Claude rewrote README.md in full (what it does, design principle, assignment mapping, architecture, run/deploy, model table and usage meter, input formats, severity rules, demo data, tests, structure, troubleshooting, limitations) and pushed it to PR #1.
+
+### 24. 2026-10-29
+**Prompt:**
+> show me what the Bom data looks like
+
+**Outcome:** Claude showed the planted-issues demo BOM as a table, marking the six planted issues and the info items against the spec values they break.
