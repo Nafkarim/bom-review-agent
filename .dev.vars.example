@@ -1,0 +1,3 @@
+# Optional: copy to .dev.vars to enable Claude in the model picker during local dev.
+# In production use: npx wrangler secret put ANTHROPIC_API_KEY
+ANTHROPIC_API_KEY=
