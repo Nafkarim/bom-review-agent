@@ -151,3 +151,9 @@ This file records the prompts used to plan and build this project, as the Cloudf
 > create a github repo for this project and make a PR
 
 **Outcome:** Claude created the public repo Nafkarim/bom-review-agent (planning docs on `main`) and opened PR #1 with the MVP build from `feat/bom-review-mvp`.
+
+### 22. 2026-10-28
+**Prompt:**
+> Turn on Auto-fix for PR #1.
+
+**Outcome:** Claude enabled Auto-fix on PR #1, so CI failures, merge conflicts and review comments wake the session to fix them.
