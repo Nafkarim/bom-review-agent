@@ -14,6 +14,7 @@ Built on the [Cloudflare Agents SDK](https://developers.cloudflare.com/agents/) 
 - [Run it locally](#run-it-locally)
 - [Deploy](#deploy)
 - [Choosing a model](#choosing-a-model)
+- [Rack specs (the gold standard)](#rack-specs-the-gold-standard)
 - [Input formats](#input-formats)
 - [Findings and severity](#findings-and-severity)
 - [Demo data](#demo-data)
@@ -36,8 +37,9 @@ This project automates that review for a data center rack. It targets the postin
 3. **LLM judgment.** Only for BOM lines the rules cannot place. The model decides whether an off-spec part substitutes for a missing spec part, and how risky the swap is.
 4. **Approval gate.** The workflow pauses. The reviewer approves or rejects each finding, can change its severity, edit the suggested action, or add a note. The verdict (READY or HOLD) updates live.
 5. **Escalation note.** Once approved, the workflow resumes and drafts a note to the ODM from the approved, actionable findings only.
-6. **Chat.** Answers questions about the review and cites BOM line numbers and finding IDs.
-7. **Audit log and usage meter.** Every step and decision is timestamped. Every LLM call is counted with tokens and estimated cost.
+6. **Editable specs.** Rack specs live in a versioned library you can edit when a spec changes, or extend with new rack designs.
+7. **Chat.** Answers questions about the review and cites BOM line numbers and finding IDs.
+8. **Audit log and usage meter.** Every step and decision is timestamped. Every LLM call is counted with tokens and estimated cost.
 
 ## Design principle
 
@@ -73,9 +75,9 @@ LLMs are unreliable at arithmetic and exact matching, and code is not. So:
 Browser (React + Kumo UI)
   │  one WebSocket per build: state sync, @callable RPC, chat stream
   ▼
-ReviewAgent  (AIChatAgent / Durable Object, named by build ID)
-  │  runWorkflow · approveWorkflow · rejectWorkflow
-  ▼
+ReviewAgent  (AIChatAgent / Durable Object, named by build ID) ◄── getCurrent(specId) ── SpecLibrary
+  │  runWorkflow · approveWorkflow · rejectWorkflow                (Durable Object: every rack
+  ▼                                                                 spec + revision history)
 ReviewWorkflow  (AgentWorkflow)
   intake ─► rules ─► llm-judge ─► publish-findings ─► waitForApproval ─► draft-note
               │          │                                                   │
@@ -83,6 +85,7 @@ ReviewWorkflow  (AgentWorkflow)
 ```
 
 - **Agent ([`src/server.ts`](src/server.ts)).** Validates input, starts the workflow, and exposes `@callable` methods to the UI: `loadDemo`, `startReview`, `submitDecisions`, `rejectReview`, `setModel`, `listModels`. Clients cannot write state directly (`validateStateChange` rejects it). Every change goes through a method and lands in the audit log.
+- **Spec library ([`src/spec-agent.ts`](src/spec-agent.ts), [`src/spec-library.ts`](src/spec-library.ts)).** One Durable Object holds every rack spec and its revision history. Reviews fetch the current revision over agent-to-agent RPC and keep a snapshot, so later edits never change a finished review. See [Rack specs](#rack-specs-the-gold-standard).
 - **Workflow ([`src/workflow.ts`](src/workflow.ts)).** Each `step.do` result is persisted, so a retry or restart never re-runs a finished step or double-counts LLM usage. The workflow reports back to the agent over typed RPC. `waitForApproval` holds it for up to 7 days.
 - **Chat.** The whole review (findings plus the submitted BOM, about 2k tokens) goes in the system prompt rather than being fetched through tool calls. In testing, Llama 3.3 looped on tool calls or leaked tool-call JSON as text. Putting the data in context works the same on every model in the picker.
 
@@ -106,7 +109,7 @@ Workers AI has no local runtime, so even local dev calls it remotely; that's why
 npm run dev:local
 ```
 
-**Your own files:** click **Upload** and provide the four files described in [Input formats](#input-formats). The `buildId` in `context.json` names the review, and each build gets its own agent instance.
+**Your own files:** click **Upload**, pick a rack spec from the library (or upload a `spec.json`), and provide `bom.csv`, `certs.csv` and `context.json`. Their formats are in [Input formats](#input-formats). The `buildId` in `context.json` names the review, and each build gets its own agent instance.
 
 ## Deploy
 
@@ -134,6 +137,21 @@ Prices were checked against provider pricing pages on 2026-10-28.
 - **Add a model:** add an entry to `MODELS` in [`src/config.ts`](src/config.ts).
 
 **Usage meter.** The header shows LLM calls, tokens in and out, and estimated cost. Click it for a breakdown by model and by call type (judge, draft, chat). A full review of the demo BOM with Llama 3.3 costs about $0.0015. The rule checks always show 0 LLM calls. Costs use list prices and don't subtract the Workers AI free allowance.
+
+## Rack specs (the gold standard)
+
+The spec is what every BOM is checked against. It lists the required parts, revisions, quantities, wattage, approved manufacturers and substitutes, plus the rack power budget. Click **Rack specs** in the header to manage it.
+
+- **Edit a spec** when it changes (an ECO), directly in the parts table. You can change any field, add or remove parts, and edit approved manufacturers (comma-separated) and approved substitutes (`PART | manufacturer | rev`, separated by semicolons).
+- **Changes need a new revision label.** If you edit without changing the revision, saving is blocked and a **Bump to D** button appears. Revision labels can't be reused, and saving with no changes is refused. This way the gold standard never changes silently.
+- **Preview before saving.** Validation and a list of changes update as you type, for example `RK-CBL-PWR-C19: qty 36 → 38`. Add a change note, such as an ECO number.
+- **Revision history.** Every saved revision is kept with its time, note and change list, and each can be downloaded as JSON.
+- **Scale to other racks.** Use **New rack spec**, or **Duplicate as new rack** to start from an existing design. Each spec has its own ID, such as `RS-STORAGE-42U`, and appears in the Upload form's spec picker.
+- **Import and export** `spec.json`. An import with a known spec ID opens as an edit to that spec; a new ID opens as a new spec.
+
+**How reviews use specs.** A review uses the library's current revision and keeps a snapshot of it, so editing a spec never changes a review that already ran. If a BOM's `context.json` names an older revision than the library's current one, the review raises a `spec-revision` blocker. Every line is still checked against the current spec, so you can see what the ECO breaks. For example, raising the C19 cable count to 38 makes line 21 of the clean demo short by 2.
+
+The library starts with the demo spec (`RS-COMPUTE-48U` rev C). Saves use the same validation as an uploaded spec, plus a few extra checks: no blank fields, a `specId` of letters, digits and dashes only, and no part number listed twice. The validation and revision rules are pure functions in [`src/spec-library.ts`](src/spec-library.ts), with unit tests.
 
 ## Input formats
 
@@ -189,7 +207,9 @@ cert_ref,part_number,drawing_revision,issued
 }
 ```
 
-`asOf` is the date the review is run "as of". Lead times are counted from it, so results are reproducible. Intake rejects a context whose `specRevision` doesn't match the spec.
+`asOf` is the date the review is run "as of". Lead times are counted from it, so results are reproducible. If `specRevision` differs from the spec's current revision, the review raises a `spec-revision` blocker; it isn't rejected at intake.
+
+`spec.json` is optional when you pick a spec from the library.
 
 ## Findings and severity
 
@@ -223,6 +243,7 @@ Each finding looks like this:
 | `substitution`      | Approved substitute used                                            | info                                               |
 | `substitution`      | LLM judges an off-spec part to be a substitute                      | needs review (blocker if high risk)                |
 | `not-in-spec`       | Off-spec part that substitutes for nothing                          | blocker (needs review if the model is unavailable) |
+| `spec-revision`     | BOM was prepared against an older spec revision                     | blocker                                            |
 | `missing-data`      | Blank lead time, blank cert reference, or cert not in the package   | needs review                                       |
 
 **Verdict:** HOLD if any blocker the reviewer hasn't rejected, otherwise READY.
@@ -256,7 +277,7 @@ Part numbers, manufacturers and the ODM are invented. [DEMO.md](DEMO.md) has a 3
 npm test
 ```
 
-35 unit tests cover:
+48 unit tests cover:
 
 - one test per planted issue, plus the exact expected list of findings;
 - the clean BOM;
@@ -265,7 +286,9 @@ npm test
 - intake validation;
 - the model registry and its fallbacks;
 - usage cost math;
-- the streaming workaround.
+- the streaming workaround;
+- the spec library: revision-bump rules, change summaries, validation, multiple rack designs, and reviews against an edited spec;
+- the 50-line test BOM against its answer key.
 
 `npm run check` runs formatting, lint, type-check and tests. CI runs it on every pull request.
 
@@ -283,6 +306,9 @@ src/
   ai-stream-fix.ts   workaround for doubled Workers AI streaming text
   demo.ts            bundles the demo files into the Worker
   types.ts           domain types
+  spec-agent.ts      SpecLibrary Durable Object: stores specs and revisions
+  spec-library.ts    spec save rules, change summaries, history (pure, tested)
+  spec-editor.tsx    Rack specs UI: edit, new rack, import/export, history
   app.tsx            UI: verdict, findings and approvals, note, audit log, chat
 demo/                synthetic spec, BOMs, certs, build contexts
 test/                vitest unit tests
@@ -304,7 +330,8 @@ wrangler.jsonc       Worker, Durable Object, Workflow and AI bindings
 - **Synthetic power model.** Power uses nameplate `wattsEach` from the spec and excludes unrecognized parts.
 - **Note formatting.** The LLM-drafted note is accurate but tends to come out as one dense paragraph.
 - **Possible stretch goals** from the [project brief](PROJECT_BRIEF.md):
-  - re-check open reviews when the spec changes (ECO);
+  - automatically re-check open reviews when a spec changes (ECO); today a re-run picks up the new revision;
+  - roles, so only some users can edit specs (the library is open to anyone with the URL);
   - a build-readiness view from lead times;
   - a Pareto chart of recurring defect types across reviews.
 

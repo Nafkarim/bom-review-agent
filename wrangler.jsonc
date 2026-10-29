@@ -20,6 +20,10 @@
       {
         "class_name": "ReviewAgent",
         "name": "ReviewAgent"
+      },
+      {
+        "class_name": "SpecLibrary",
+        "name": "SpecLibrary"
       }
     ]
   },
@@ -34,6 +38,10 @@
     {
       "new_sqlite_classes": ["ReviewAgent"],
       "tag": "v1"
+    },
+    {
+      "new_sqlite_classes": ["SpecLibrary"],
+      "tag": "v2"
     }
   ],
   "observability": { "enabled": true }

@@ -293,13 +293,15 @@ describe("intake", () => {
     }
   });
 
-  it("rejects a context whose spec revision does not match", () => {
+  it("accepts a context on another spec revision (the rules flag it instead)", () => {
     const ctx = JSON.parse(DEMOS.clean.context);
-    expect(() =>
-      parseReviewInput({
-        ...DEMOS.clean,
-        context: JSON.stringify({ ...ctx, specRevision: "B" })
-      })
-    ).toThrow(/does not match/);
+    const input = parseReviewInput({
+      ...DEMOS.clean,
+      context: JSON.stringify({ ...ctx, specRevision: "B" })
+    });
+    expect(runRules(input).findings[0]).toMatchObject({
+      category: "spec-revision",
+      found: "prepared against rev B"
+    });
   });
 });

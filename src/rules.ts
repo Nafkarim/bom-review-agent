@@ -72,6 +72,20 @@ export function runRules(input: ReviewInput): RuleResult {
   const unmatched: BomLine[] = [];
   const needBy = new Date(`${context.needBy}T00:00:00Z`);
 
+  if (context.specRevision !== spec.revision) {
+    findings.push({
+      line: null,
+      partNumber: "(spec)",
+      category: "spec-revision",
+      severity: "blocker",
+      expected: `BOM prepared against ${spec.specId} rev ${spec.revision}`,
+      found: `prepared against rev ${context.specRevision}`,
+      evidence: `The spec changed after the ODM built this BOM; line findings below are checked against rev ${spec.revision}.`,
+      suggestedAction: `Ask the ODM to resubmit against rev ${spec.revision}, or confirm the changes between revisions do not affect this build.`,
+      source: "rule"
+    });
+  }
+
   const count = (pn: string, line: BomLine) => {
     coverage.set(pn, (coverage.get(pn) ?? 0) + line.quantity);
     linesFor.set(pn, [...(linesFor.get(pn) ?? []), line.line]);

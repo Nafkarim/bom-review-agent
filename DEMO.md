@@ -10,3 +10,8 @@
 8. **Switch the model** to Llama 4 Scout and ask another question. The usage meter splits totals by model.
 9. **Choose Demo: clean BOM** and run it: **READY**, no LLM call needed (nothing is off-spec).
 10. **Reload the page:** all state persists (Durable Object storage).
+11. **Change the gold standard:** open **Rack specs** and change `RK-CBL-PWR-C19` qty from 36 to 38. Saving is blocked until you click **Bump to D**. Add a note ("ECO-201") and save, and the revision history shows the change.
+12. **Re-run the clean BOM:** it now comes back **HOLD**. Line 21 is short by 2, and a `spec-revision` blocker says the BOM was built to rev C.
+13. **Scale to another rack:** click **Duplicate as new rack**, name it `RS-STORAGE-42U`, and create it. It now appears in the Upload form's spec picker.
+
+To get the original demo back, stop the dev server and delete `.wrangler/state/v3/do/bom-review-agent-SpecLibrary`.

@@ -1,4 +1,9 @@
-import { callable, routeAgentRequest, type Connection } from "agents";
+import {
+  callable,
+  getAgentByName,
+  routeAgentRequest,
+  type Connection
+} from "agents";
 import { AIChatAgent, type OnChatMessageOptions } from "@cloudflare/ai-chat";
 import { convertToModelMessages, streamText } from "ai";
 import { availableModels, defaultModelId, getModel } from "./config";
@@ -14,7 +19,10 @@ import type {
 } from "./types";
 import { makeUsageRecord } from "./usage";
 
+import { SPEC_LIBRARY_NAME, type SpecLibrary } from "./spec-agent";
+
 export { ReviewWorkflow } from "./workflow";
+export { SpecLibrary } from "./spec-agent";
 
 type AgentEnv = Env & { ANTHROPIC_API_KEY?: string };
 
@@ -22,6 +30,12 @@ const MAX_AUDIT = 200;
 const MAX_USAGE = 500;
 
 export type StartResult = { ok: true } | { ok: false; problems: string[] };
+
+/** BOM, certs and context files plus either a library spec ID or an uploaded spec.json. */
+export type ReviewSubmission = Omit<RawReviewFiles, "spec"> & {
+  spec?: string;
+  specId?: string;
+};
 
 /** One instance per review, named by build ID. All review state lives here (SQLite-backed). */
 export class ReviewAgent extends AIChatAgent<AgentEnv, ReviewState> {
@@ -90,11 +104,48 @@ export class ReviewAgent extends AIChatAgent<AgentEnv, ReviewState> {
   async loadDemo(name: DemoName): Promise<StartResult> {
     const files = DEMOS[name];
     if (!files) return { ok: false, problems: [`Unknown demo ${name}`] };
-    return this.startReview(files);
+    // Demos review against the library's current spec, so spec edits show up in them.
+    const { bom, certs, context } = files;
+    return this.startReview({
+      bom,
+      certs,
+      context,
+      specId: JSON.parse(files.spec).specId
+    });
   }
 
+  /**
+   * Starts a review. The spec is either a library spec (`specId`, current
+   * revision, snapshotted for this review) or an uploaded spec.json (`spec`).
+   */
   @callable()
-  async startReview(files: RawReviewFiles): Promise<StartResult> {
+  async startReview(submission: ReviewSubmission): Promise<StartResult> {
+    let files: RawReviewFiles;
+    let specSource: string;
+    if (submission.specId) {
+      const library = await getAgentByName(
+        this.env.SpecLibrary as DurableObjectNamespace<SpecLibrary>,
+        SPEC_LIBRARY_NAME
+      );
+      const spec = await library.getCurrent(submission.specId);
+      if (!spec) {
+        return {
+          ok: false,
+          problems: [`Spec ${submission.specId} is not in the spec library`]
+        };
+      }
+      files = { ...submission, spec: JSON.stringify(spec) };
+      specSource = `library spec ${spec.specId} rev ${spec.revision}`;
+    } else if (submission.spec) {
+      files = { ...submission, spec: submission.spec };
+      specSource = "uploaded spec.json";
+    } else {
+      return {
+        ok: false,
+        problems: ["Choose a library spec or upload spec.json"]
+      };
+    }
+
     let input;
     try {
       input = parseReviewInput(files);
@@ -140,7 +191,7 @@ export class ReviewAgent extends AIChatAgent<AgentEnv, ReviewState> {
       {
         actor: "system",
         action: "Review started",
-        detail: `${input.bom.length} BOM lines, model ${modelId}`
+        detail: `${input.bom.length} BOM lines against ${specSource}, model ${modelId}`
       }
     );
     const workflowId = await this.runWorkflow("REVIEW_WORKFLOW", {

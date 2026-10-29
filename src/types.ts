@@ -68,7 +68,8 @@ export type Category =
   | "power"
   | "cert"
   | "vendor"
-  | "not-in-spec";
+  | "not-in-spec"
+  | "spec-revision";
 
 export type Severity = "blocker" | "needs-review" | "info";
 

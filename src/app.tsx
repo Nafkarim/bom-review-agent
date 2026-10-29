@@ -24,6 +24,7 @@ import {
   CircleIcon,
   CopyIcon,
   GaugeIcon,
+  ListChecksIcon,
   MoonIcon,
   PaperPlaneRightIcon,
   StopIcon,
@@ -33,7 +34,8 @@ import {
   WarningOctagonIcon,
   WrenchIcon
 } from "@phosphor-icons/react";
-import type { ReviewAgent, StartResult } from "./server";
+import type { ReviewAgent, ReviewSubmission, StartResult } from "./server";
+import { SpecLibraryView, useSpecList } from "./spec-editor";
 import type { Finding, FindingDecision, ReviewState, Severity } from "./types";
 import { DEMO_BUILD_IDS, type DemoName } from "./demo";
 import type { RawReviewFiles } from "./parse";
@@ -503,7 +505,7 @@ function Workspace({
   onPendingHandled
 }: {
   buildId: string;
-  pendingFiles: RawReviewFiles | null;
+  pendingFiles: ReviewSubmission | null;
   onPendingHandled: () => void;
 }) {
   const [connected, setConnected] = useState(false);
@@ -844,22 +846,29 @@ const UPLOAD_FIELDS: {
   label: string;
   accept: string;
 }[] = [
-  { key: "spec", label: "spec.json", accept: ".json" },
   { key: "bom", label: "bom.csv", accept: ".csv" },
   { key: "certs", label: "certs.csv", accept: ".csv" },
-  { key: "context", label: "context.json", accept: ".json" }
+  { key: "context", label: "context.json", accept: ".json" },
+  { key: "spec", label: "spec.json", accept: ".json" }
 ];
+
+const UPLOADED_SPEC = "__upload__";
 
 function UploadForm({
   onReady,
   onCancel
 }: {
-  onReady: (buildId: string, files: RawReviewFiles) => void;
+  onReady: (buildId: string, submission: ReviewSubmission) => void;
   onCancel: () => void;
 }) {
+  const specs = useSpecList();
   const [files, setFiles] = useState<Partial<RawReviewFiles>>({});
+  const [specChoice, setSpecChoice] = useState<string>("");
   const [error, setError] = useState("");
-  const ready = UPLOAD_FIELDS.every((f) => files[f.key]);
+  const choice = specChoice || specs[0]?.specId || UPLOADED_SPEC;
+  const useUpload = choice === UPLOADED_SPEC;
+  const fields = UPLOAD_FIELDS.filter((f) => f.key !== "spec" || useUpload);
+  const ready = fields.every((f) => files[f.key]);
   return (
     <Surface className="rounded-xl ring ring-kumo-line px-5 py-4 space-y-3 m-6">
       <Text size="sm" bold>
@@ -869,8 +878,24 @@ function UploadForm({
         Formats match the files in <code>demo/</code>. The build ID in
         context.json names the review.
       </Text>
+      <label className="text-xs space-y-1 block max-w-md">
+        <div>Review against</div>
+        <select
+          aria-label="Rack spec"
+          className="rounded-md bg-kumo-base ring ring-kumo-line px-2 py-1.5 text-sm w-full"
+          value={choice}
+          onChange={(e) => setSpecChoice(e.target.value)}
+        >
+          {specs.map((s) => (
+            <option key={s.specId} value={s.specId}>
+              {s.specId} rev {s.revision} (library, {s.partCount} parts)
+            </option>
+          ))}
+          <option value={UPLOADED_SPEC}>Upload a spec.json instead</option>
+        </select>
+      </label>
       <div className="grid grid-cols-2 gap-3">
-        {UPLOAD_FIELDS.map((f) => (
+        {fields.map((f) => (
           <label key={f.key} className="text-xs space-y-1">
             <div>{f.label}</div>
             <input
@@ -898,7 +923,13 @@ function UploadForm({
                 throw new Error(
                   "context.json needs a buildId (letters, digits, dashes)"
                 );
-              onReady(buildId, files as RawReviewFiles);
+              const { bom, certs, context, spec } = files as RawReviewFiles;
+              onReady(
+                buildId,
+                useUpload
+                  ? { bom, certs, context, spec }
+                  : { bom, certs, context, specId: choice }
+              );
             } catch (e) {
               setError(e instanceof Error ? e.message : String(e));
             }
@@ -918,18 +949,20 @@ function UploadForm({
 
 function Shell() {
   const [buildId, setBuildId] = useState<string>(DEMO_BUILD_IDS.issues);
-  const [uploading, setUploading] = useState(false);
-  const [pending, setPending] = useState<RawReviewFiles | null>(null);
+  const [view, setView] = useState<"review" | "upload" | "specs">("review");
+  const [pending, setPending] = useState<ReviewSubmission | null>(null);
   const clearPending = useCallback(() => setPending(null), []);
 
   const demoButton = (name: DemoName, label: string) => (
     <Button
       size="sm"
       variant={
-        buildId === DEMO_BUILD_IDS[name] && !uploading ? "primary" : "secondary"
+        buildId === DEMO_BUILD_IDS[name] && view === "review"
+          ? "primary"
+          : "secondary"
       }
       onClick={() => {
-        setUploading(false);
+        setView("review");
         setBuildId(DEMO_BUILD_IDS[name]);
       }}
     >
@@ -949,20 +982,30 @@ function Shell() {
         {demoButton("clean", "Demo: clean BOM")}
         <Button
           size="sm"
-          variant={uploading ? "primary" : "secondary"}
+          variant={view === "upload" ? "primary" : "secondary"}
           icon={<UploadSimpleIcon size={14} />}
-          onClick={() => setUploading(true)}
+          onClick={() => setView("upload")}
         >
           Upload
         </Button>
+        <Button
+          size="sm"
+          variant={view === "specs" ? "primary" : "secondary"}
+          icon={<ListChecksIcon size={14} />}
+          onClick={() => setView("specs")}
+        >
+          Rack specs
+        </Button>
         <ThemeToggle />
       </header>
-      {uploading ? (
+      {view === "specs" ? (
+        <SpecLibraryView />
+      ) : view === "upload" ? (
         <UploadForm
-          onCancel={() => setUploading(false)}
-          onReady={(id, files) => {
-            setUploading(false);
-            setPending(files);
+          onCancel={() => setView("review")}
+          onReady={(id, submission) => {
+            setView("review");
+            setPending(submission);
             setBuildId(id);
           }}
         />

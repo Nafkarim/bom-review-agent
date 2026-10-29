@@ -18,33 +18,73 @@ export class IntakeError extends Error {
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "expected YYYY-MM-DD");
 
-const specSchema = z.object({
-  specId: z.string().min(1),
-  revision: z.string().min(1),
-  rackName: z.string().min(1),
-  powerBudgetW: z.number().positive(),
-  parts: z
-    .array(
-      z.object({
-        partNumber: z.string().min(1),
-        description: z.string(),
-        revision: z.string().min(1),
-        qtyPerRack: z.number().int().positive(),
-        wattsEach: z.number().nonnegative(),
-        approvedManufacturers: z.array(z.string()).min(1),
-        approvedSubstitutes: z
-          .array(
-            z.object({
-              partNumber: z.string(),
-              manufacturer: z.string(),
-              revision: z.string()
-            })
-          )
-          .default([])
-      })
+const nonBlank = z.string().trim().min(1, "must not be blank");
+
+export const specSchema = z
+  .object({
+    specId: z
+      .string()
+      .trim()
+      .regex(/^[A-Za-z0-9-]+$/, "letters, digits and dashes only"),
+    revision: nonBlank,
+    rackName: nonBlank,
+    powerBudgetW: z.number().positive(),
+    parts: z
+      .array(
+        z.object({
+          partNumber: nonBlank,
+          description: z.string(),
+          revision: nonBlank,
+          qtyPerRack: z.number().int().positive(),
+          wattsEach: z.number().nonnegative(),
+          approvedManufacturers: z.array(nonBlank).min(1),
+          approvedSubstitutes: z
+            .array(
+              z.object({
+                partNumber: nonBlank,
+                manufacturer: nonBlank,
+                revision: nonBlank
+              })
+            )
+            .default([])
+        })
+      )
+      .min(1)
+  })
+  .superRefine((spec, ctx) => {
+    // Every part number (spec or substitute) must map to exactly one spec part.
+    const seen = new Map<string, number>();
+    spec.parts.forEach((p, i) => {
+      for (const pn of [
+        p.partNumber,
+        ...p.approvedSubstitutes.map((s) => s.partNumber)
+      ]) {
+        if (seen.has(pn)) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["parts", i],
+            message: `part number ${pn} is listed more than once (also in parts.${seen.get(pn)})`
+          });
+        } else {
+          seen.set(pn, i);
+        }
+      }
+    });
+  });
+
+/** Validates a spec object; returns the parsed spec or a list of readable problems. */
+export function validateSpec(
+  raw: unknown
+): { ok: true; spec: Spec } | { ok: false; problems: string[] } {
+  const result = specSchema.safeParse(raw);
+  if (result.success) return { ok: true, spec: result.data };
+  return {
+    ok: false,
+    problems: result.error.issues.map(
+      (i) => `${i.path.join(".") || "(root)"}: ${i.message}`
     )
-    .min(1)
-});
+  };
+}
 
 const contextSchema = z.object({
   buildId: z
@@ -236,11 +276,8 @@ export function parseReviewInput(files: RawReviewFiles): ReviewInput {
   if (bom.length === 0 && !problems.some((p) => p.startsWith("bom.csv"))) {
     problems.push("bom.csv: no BOM lines");
   }
-  if (spec && context && spec.revision !== context.specRevision) {
-    problems.push(
-      `context.json: specRevision ${context.specRevision} does not match spec.json revision ${spec.revision}`
-    );
-  }
+  // A context built against another spec revision is not an intake error: the
+  // rules report it as a blocker, so a spec change (ECO) shows up in the review.
   if (problems.length > 0 || !spec || !context) throw new IntakeError(problems);
   return { spec, bom: bom.sort((a, b) => a.line - b.line), certs, context };
 }
