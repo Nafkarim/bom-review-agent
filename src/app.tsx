@@ -43,6 +43,8 @@ import { summarizeUsage } from "./usage";
 
 // ── Small pieces ──────────────────────────────────────────────────────
 
+const REPO_URL = "https://github.com/Nafkarim/bom-review-agent";
+
 const SEVERITY_BADGE: Record<
   Severity,
   "destructive" | "primary" | "secondary"
@@ -1017,8 +1019,24 @@ function Shell() {
           onPendingHandled={clearPending}
         />
       )}
-      <div className="flex justify-center py-2 border-t border-kumo-line">
+      <div className="flex justify-center items-center gap-4 py-2 border-t border-kumo-line text-xs">
         <PoweredByCloudflare href="https://developers.cloudflare.com/agents/" />
+        <a
+          className="text-kumo-inactive hover:text-kumo-default underline"
+          href={`${REPO_URL}/blob/main/PROMPTS.md`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Prompt history
+        </a>
+        <a
+          className="text-kumo-inactive hover:text-kumo-default underline"
+          href={REPO_URL}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Source on GitHub
+        </a>
       </div>
     </div>
   );
