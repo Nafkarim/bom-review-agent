@@ -217,3 +217,9 @@ Commands typed straight into the terminal (such as `npm run dev` or `wrangler lo
 > make sure there is a spot for them to see prompt history
 
 **Outcome:** Claude made the prompt history easy to find: a callout at the top of the README, a row in the assignment table, an at-a-glance overview at the top of PROMPTS.md, and "Prompt history" and "Source on GitHub" links in the app footer.
+
+### 30. 2026-11-02
+**Prompt:**
+> Merge when green
+
+**Outcome:** Claude turned on auto-merge for PR #2 so it merges into `main` once CI passes.
