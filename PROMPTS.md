@@ -181,3 +181,9 @@ This file records the prompts used to plan and build this project, as the Cloudf
 > Build a way users can change/edit the gold standard is spec.json, the rack spec. I want this incase specs change and/or scaling the tool to different racks
 
 **Outcome:** Claude added a versioned spec library (SpecLibrary Durable Object) with a Rack specs editor: edit parts, mandatory revision bump with change preview and history, new/duplicated rack specs, import/export. Reviews now use library specs (snapshotted) and flag BOMs built to an older revision; verified end to end in the browser.
+
+### 27. 2026-11-02
+**Prompt:**
+> make sure to to have GitHub repo URL so anyone with link can view it
+
+**Outcome:** Claude confirmed the repo is public and loads without login, and found that `main` (what the repo URL shows) only had the planning docs; the code was still on PR #1, so merging it was proposed.
