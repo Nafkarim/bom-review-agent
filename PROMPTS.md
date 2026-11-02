@@ -187,3 +187,9 @@ This file records the prompts used to plan and build this project, as the Cloudf
 > make sure to to have GitHub repo URL so anyone with link can view it
 
 **Outcome:** Claude confirmed the repo is public and loads without login, and found that `main` (what the repo URL shows) only had the planning docs; the code was still on PR #1, so merging it was proposed.
+
+### 28. 2026-11-02
+**Prompt:**
+> Merge PR #1
+
+**Outcome:** Claude merged PR #1 into `main` (merge commit, history kept), so the public repo URL now shows the full project.
