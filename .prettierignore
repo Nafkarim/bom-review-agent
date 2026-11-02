@@ -1,0 +1,8 @@
+env.d.ts
+# Hand-maintained logs and docs: prompt history must stay verbatim.
+PROMPTS.md
+PROJECT_BRIEF.md
+CLAUDE.md
+# Generated demo data and template CI.
+demo/
+.github/

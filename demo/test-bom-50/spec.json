@@ -1,0 +1,410 @@
+{
+  "specId": "RS-COMPUTE-48U",
+  "revision": "C",
+  "rackName": "48U compute rack, 16-node",
+  "powerBudgetW": 17000,
+  "parts": [
+    {
+      "partNumber": "RK-FRAME-48U",
+      "description": "48U rack frame, 600x1200mm",
+      "revision": "B",
+      "qtyPerRack": 1,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Granite Racks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-PDU-30A-3P",
+      "description": "Switched PDU, 30A 3-phase, 42x C13 / 6x C19",
+      "revision": "D",
+      "qtyPerRack": 2,
+      "wattsEach": 20,
+      "approvedManufacturers": [
+        "Northwind Power"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-BRKT-PDU",
+      "description": "Tool-less PDU mounting bracket",
+      "revision": "A",
+      "qtyPerRack": 4,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Granite Racks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-SRV-2U-G5",
+      "description": "2U compute server, gen 5, 2x CPU",
+      "revision": "F",
+      "qtyPerRack": 16,
+      "wattsEach": 850,
+      "approvedManufacturers": [
+        "Meridian Compute"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-PSU-1600",
+      "description": "Server power supply, 1600W titanium",
+      "revision": "C",
+      "qtyPerRack": 32,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Meridian Compute"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-DIMM-64G",
+      "description": "64GB DDR5 RDIMM",
+      "revision": "A",
+      "qtyPerRack": 256,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Meridian Compute"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-SSD-3T84",
+      "description": "3.84TB NVMe U.2 SSD",
+      "revision": "D",
+      "qtyPerRack": 64,
+      "wattsEach": 12,
+      "approvedManufacturers": [
+        "Meridian Compute"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-NIC-100G",
+      "description": "Dual-port 100GbE NIC, PCIe Gen5",
+      "revision": "B",
+      "qtyPerRack": 16,
+      "wattsEach": 20,
+      "approvedManufacturers": [
+        "Summit Networks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-RAIL-2U",
+      "description": "2U sliding rail kit",
+      "revision": "B",
+      "qtyPerRack": 16,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Granite Racks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-CMA-2U",
+      "description": "2U cable management arm",
+      "revision": "A",
+      "qtyPerRack": 16,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Granite Racks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-SW-TOR-100G",
+      "description": "Top-of-rack switch, 32x 100G QSFP28",
+      "revision": "C",
+      "qtyPerRack": 2,
+      "wattsEach": 450,
+      "approvedManufacturers": [
+        "Summit Networks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-SW-MGMT-1G",
+      "description": "Management switch, 48x 1G RJ45",
+      "revision": "B",
+      "qtyPerRack": 1,
+      "wattsEach": 90,
+      "approvedManufacturers": [
+        "Summit Networks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-RAIL-1U",
+      "description": "1U fixed rail kit",
+      "revision": "A",
+      "qtyPerRack": 3,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Granite Racks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-XCVR-100G-SR4",
+      "description": "100G QSFP28 SR4 transceiver, 850nm, MPO-12",
+      "revision": "A",
+      "qtyPerRack": 32,
+      "wattsEach": 3.5,
+      "approvedManufacturers": [
+        "Atlas Optics"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-DAC-100G-2M",
+      "description": "100G QSFP28 passive DAC, 2m",
+      "revision": "A",
+      "qtyPerRack": 32,
+      "wattsEach": 0.5,
+      "approvedManufacturers": [
+        "Keystone Cable"
+      ],
+      "approvedSubstitutes": [
+        {
+          "partNumber": "RK-DAC-100G-2M-S",
+          "manufacturer": "Summit Networks",
+          "revision": "A"
+        }
+      ]
+    },
+    {
+      "partNumber": "RK-CBL-OM4-3M",
+      "description": "OM4 MPO-12 fiber trunk, 3m",
+      "revision": "A",
+      "qtyPerRack": 32,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Keystone Cable"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-CBL-CAT6-1M",
+      "description": "Cat6 patch cable, 1m, blue",
+      "revision": "A",
+      "qtyPerRack": 20,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Keystone Cable"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-CBL-CAT6-3M",
+      "description": "Cat6 patch cable, 3m, blue",
+      "revision": "A",
+      "qtyPerRack": 4,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Keystone Cable"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-CBL-PWR-C19",
+      "description": "C19-C20 power cable, 1.5m",
+      "revision": "A",
+      "qtyPerRack": 36,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Keystone Cable"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-CBL-PWR-C13",
+      "description": "C13-C14 power cable, 1m",
+      "revision": "A",
+      "qtyPerRack": 6,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Keystone Cable"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-PATCH-24",
+      "description": "24-port Cat6 patch panel, 1U",
+      "revision": "A",
+      "qtyPerRack": 1,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Keystone Cable"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-CONSOLE-SRV",
+      "description": "Serial console server, 16-port",
+      "revision": "C",
+      "qtyPerRack": 1,
+      "wattsEach": 25,
+      "approvedManufacturers": [
+        "Summit Networks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-SENSOR-ENV",
+      "description": "Rack temperature/humidity sensor",
+      "revision": "B",
+      "qtyPerRack": 2,
+      "wattsEach": 2,
+      "approvedManufacturers": [
+        "Harbor Thermal"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-DOOR-PERF",
+      "description": "Perforated front door, 48U",
+      "revision": "A",
+      "qtyPerRack": 1,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Granite Racks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-DOOR-REAR",
+      "description": "Split perforated rear door, 48U",
+      "revision": "A",
+      "qtyPerRack": 1,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Granite Racks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-PANEL-SIDE",
+      "description": "Side panel pair, 48U",
+      "revision": "A",
+      "qtyPerRack": 1,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Granite Racks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-BLANK-1U",
+      "description": "1U tool-less blanking panel",
+      "revision": "A",
+      "qtyPerRack": 10,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Granite Racks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-CAGE-M6",
+      "description": "M6 cage nut and screw kit (50 pcs)",
+      "revision": "A",
+      "qtyPerRack": 2,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Granite Racks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-GND-KIT",
+      "description": "Rack grounding and bonding kit",
+      "revision": "A",
+      "qtyPerRack": 1,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Northwind Power"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-CASTER-KIT",
+      "description": "Heavy-duty caster and leveler kit",
+      "revision": "A",
+      "qtyPerRack": 1,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Granite Racks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-LABEL-KIT",
+      "description": "Port and cable label kit",
+      "revision": "A",
+      "qtyPerRack": 1,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Keystone Cable"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-VELCRO-5M",
+      "description": "Hook-and-loop cable wrap, 5m roll",
+      "revision": "A",
+      "qtyPerRack": 2,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Keystone Cable"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-SEAL-KIT",
+      "description": "Air dam and brush strip seal kit",
+      "revision": "A",
+      "qtyPerRack": 1,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Harbor Thermal"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-TRAY-VERT",
+      "description": "Vertical cable manager, 48U",
+      "revision": "B",
+      "qtyPerRack": 2,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Granite Racks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-SHIP-BRKT",
+      "description": "Shipping brace kit",
+      "revision": "A",
+      "qtyPerRack": 1,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Granite Racks"
+      ],
+      "approvedSubstitutes": []
+    },
+    {
+      "partNumber": "RK-DOC-PACK",
+      "description": "Rack build documentation pack",
+      "revision": "A",
+      "qtyPerRack": 1,
+      "wattsEach": 0,
+      "approvedManufacturers": [
+        "Granite Racks"
+      ],
+      "approvedSubstitutes": []
+    }
+  ]
+}
