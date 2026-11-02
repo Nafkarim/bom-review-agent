@@ -2,6 +2,24 @@
 
 This file records the prompts used to plan and build this project, as the Cloudflare posting requires ("AI-assisted coding is encouraged, but you have to submit prompt history").
 
+**At a glance**
+
+| Phase | Entries | Tool | What happened |
+|---|---|---|---|
+| [Phase 1: Planning](#phase-1-planning-claudeai-chat) | 1–16 | claude.ai chat | Read the posting and the Agents docs, picked the project, planned inputs, pipeline and outputs |
+| [Phase 2: Build](#phase-2-build-claude-code) | 17 onward | Claude Code | Built, tested and shipped the app |
+
+Key build milestones:
+- **17–20:** build plan, model choice and usage meter.
+- **20:** MVP built.
+- **21:** GitHub repo and PR.
+- **23:** README.
+- **25:** 50-line test BOM.
+- **26:** editable spec library.
+- **28:** merged to `main`.
+
+Commands typed straight into the terminal (such as `npm run dev` or `wrangler login`) weren't prompts to the AI, so they aren't logged here.
+
 **Rules for keeping it:**
 
 - Prompts are logged verbatim (typos included), in order.
@@ -193,3 +211,15 @@ This file records the prompts used to plan and build this project, as the Cloudf
 > Merge PR #1
 
 **Outcome:** Claude merged PR #1 into `main` (merge commit, history kept), so the public repo URL now shows the full project.
+
+### 29. 2026-11-02
+**Prompt:**
+> make sure there is a spot for them to see prompt history
+
+**Outcome:** Claude made the prompt history easy to find: a callout at the top of the README, a row in the assignment table, an at-a-glance overview at the top of PROMPTS.md, and "Prompt history" and "Source on GitHub" links in the app footer.
+
+### 30. 2026-11-02
+**Prompt:**
+> Merge when green
+
+**Outcome:** Claude turned on auto-merge for PR #2 so it merges into `main` once CI passes.

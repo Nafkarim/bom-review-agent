@@ -4,8 +4,11 @@ An AI agent on Cloudflare that reviews a manufacturer's (ODM's) rack Bill of Mat
 
 Built on the [Cloudflare Agents SDK](https://developers.cloudflare.com/agents/) for the optional assignment on Cloudflare's Rack Integration Operations Engineer posting. **All data in this repo is synthetic.**
 
+> **Prompt history (required by the posting):** every prompt used to plan and build this project, in order and word for word, is in **[PROMPTS.md](PROMPTS.md)**, along with what each prompt produced. It covers planning in claude.ai (entries 1–16) and the build in Claude Code (entries 17 onward).
+
 ## Contents
 
+- [Prompt history](PROMPTS.md) (separate file)
 - [Why this exists](#why-this-exists)
 - [What it does](#what-it-does)
 - [Design principle](#design-principle)
@@ -68,6 +71,7 @@ LLMs are unreliable at arithmetic and exact matching, and code is not. So:
 | Workflow / coordination | A Cloudflare Workflow ([`src/workflow.ts`](src/workflow.ts)) started by the agent. Its durable steps are intake → rules → LLM judgment → **pause for human approval** → draft note. |
 | User input via chat     | React chat panel using `useAgentChat`, streaming from the agent.                                                                                                                    |
 | Memory / state          | One `ReviewAgent` Durable Object per build ID, backed by SQLite. It holds findings, reviewer decisions, the audit log, chat history, the selected model and usage records.          |
+| Prompt history          | [PROMPTS.md](PROMPTS.md): every prompt, verbatim, with its outcome.                                                                                                                 |
 
 ## Architecture
 
